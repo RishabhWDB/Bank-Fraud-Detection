@@ -5,7 +5,7 @@ import os
 os.makedirs("data", exist_ok = True)
 
 np.random.seed(42)
-n = 1000
+n = 2000
 
 transaction_id = np.arange(1 , n + 1)
 amount = np.round(np.random.exponential(scale = 200 , size = n), 2)
