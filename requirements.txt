@@ -1,0 +1,9 @@
+dvc
+mlflow
+scikit-learn
+pandas
+numpy
+fastapi
+uvicorn
+requests
+tabulate
