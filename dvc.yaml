@@ -1,0 +1,7 @@
+stages:
+  clean:
+    cmd: python clean_data.py
+    deps:
+      - data/raw.csv
+    outs:
+      - data/clean.csv
