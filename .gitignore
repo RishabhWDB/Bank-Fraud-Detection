@@ -210,3 +210,4 @@ __marimo__/
 bfenv/
 mlruns/
 my-mlflow-experiments/mlflow.db
+mlflow.db
