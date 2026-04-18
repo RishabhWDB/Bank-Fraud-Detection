@@ -47,7 +47,7 @@ with mlflow.start_run(run_name = "Logistic Regression, C = 10.0"):
 
     
 with mlflow.start_run(run_name = "Random Forest Classifier"):
-    model = RandomForestClassifier(n_estimators=50)
+    model = RandomForestClassifier(n_estimators=50, random_state=42)
     model.fit(X_train, y_train)
     y_pred_proba = model.predict_proba(X_test)[:, 1]
     
@@ -59,6 +59,22 @@ with mlflow.start_run(run_name = "Random Forest Classifier"):
     mlflow.sklearn.log_model(model, "model", registered_model_name="my_fraud_detector")
     
     print(f"RF n=50 | AUC-ROC: {auc_roc:.4f} | AUC-PR: {auc_pr:.4f}")
+
+
+#Bonus n=200 Random Forest Regressor
+with mlflow.start_run(run_name="Random Forest Classifier n=200"):
+    model = RandomForestClassifier(n_estimators=200, random_state=42)
+    model.fit(X_train, y_train)
+    y_pred_proba = model.predict_proba(X_test)[:, 1]
+
+    auc_roc = roc_auc_score(y_test, y_pred_proba)
+    auc_pr = average_precision_score(y_test, y_pred_proba)
+
+    mlflow.log_params({"model": "RandomForest", "n_estimators": 200})
+    mlflow.log_metrics({"auc_roc": auc_roc, "auc_pr": auc_pr})
+    mlflow.sklearn.log_model(model, "model", registered_model_name="my_fraud_detector")
+    
+    print(f"RF n=200 | AUC-ROC: {auc_roc:.4f} | AUC-PR: {auc_pr:.4f}")
 
 
 from mlflow.tracking import MlflowClient
@@ -83,5 +99,7 @@ def select_best_model():
     )
     
     print(f"Model version {best_version.version} transitioned to Staging")
+
+    print(f"Winner: {best_run['tags.mlflow.runName']} | AUC-PR: {best_run['metrics.auc_pr']:.4f}")
 
 select_best_model()
