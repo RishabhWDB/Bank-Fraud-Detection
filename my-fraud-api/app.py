@@ -10,6 +10,7 @@ app = FastAPI()
 df = pd.read_csv("../data/clean.csv")
 X = df[["amount", "num_transactions_24h", "distance_from_home_km", "is_weekend"]]
 y = df["is_fraud"]
+
 model = RandomForestClassifier(n_estimators=50, random_state=42)
 model.fit(X, y)
 
@@ -52,7 +53,7 @@ def predict(transaction: Transaction):
     prob = model.predict_proba(X_input)[0][1]
     return {
         "fraud_probability": round(float(prob), 4),
-        "is_fraud": prob >= 0.5,
+        "is_fraud": bool(prob >= 0.5),
         "risk_level": get_risk_level(prob)
     }
 
@@ -68,7 +69,7 @@ def predict_batch(transactions: List[Transaction]):
     return [
         {
             "fraud_probability": round(float(prob), 4),
-            "is_fraud": prob >= 0.5,
+            "is_fraud": bool(prob >= 0.5),
             "risk_level": get_risk_level(prob)
         }
         for prob in probs
